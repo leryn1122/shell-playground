@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 #shellchek=bash
 
-set -eu
+set -euo pipefail
+
+echo "Load log4sh library..."
 
 # Print stack trace, implemented by built-in `caller`.
-stack_trace() {
+function stack_trace() {
   printf 'error: %s\n' "$1" >&2
   local i=0
   while true; do
@@ -19,7 +21,33 @@ stack_trace() {
 }
 
 # Print stack trace, and throw error.
-throw() {
+function throw() {
   stack_trace "$1" >&2
   exit 1
+}
+
+function __log() {
+  echo -e "[$1] %@"
+}
+
+function log_trace() {
+  __log 'TRACE' "$@"
+}
+
+function log_debug() {
+  __log 'DEBUG' "$@"
+}
+
+function log_info() {
+  __log 'INFO' "$@"
+}
+
+
+function log_warn() {
+  __log 'WARN' "$@"
+}
+
+
+function log_error() {
+  __log 'ERROR' "$@"
 }
